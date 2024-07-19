@@ -1,25 +1,20 @@
 pipeline {
-    agent any
+  agent any
     stages {
-        stage ('Checkout') {
-            steps {
-                git branch: 'master', url: 'https://github.com/OWASP/Vulnerable-Web-Application.git'
-            }
-        }
-        stage ('Code Quality Check via SonarQube') {
-            steps {
-                script {
-                    def scannerHome = tool 'SonarQube';
-                    withSonarQubeEnv('SonarQube') {
-                        sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=OWASP -Dsonar.sources=."
-                    }
-                }
-            }
+      stage ('Checkout') {
+        steps {
+            git branch:'master', url: 'https://github.com/whoistfq/Vulnerable-Web-Application.git'
         }
     }
-    post {
-        always {
-            recordIssues enabledForFailure: true, tool: SonarQube()
+    stage('Code Quality Check via SonarQube') {
+      steps {
+        script {
+        def scannerHome = tool 'SonarQube';
+          withSonarQubeEnv('SonarQube') {
+            sh "${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=OWASP -Dsonar.sources=."
+          }
         }
+      }
     }
+  }
 }
